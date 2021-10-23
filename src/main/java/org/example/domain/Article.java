@@ -2,7 +2,9 @@ package org.example.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.example.domain.exceptions.EmptyStockException;
 import org.example.domain.exceptions.IllegalStockException;
+import org.example.domain.exceptions.NotEnoughStockException;
 
 @Getter
 @AllArgsConstructor
@@ -17,6 +19,8 @@ public class Article {
     }
 
     public Article reduceStock(final int itemsDeducted) {
-        return null;
+        if (this.stock == 0) throw new EmptyStockException("Stock already empty,cannot reduce more");
+        if (this.stock < itemsDeducted) throw new NotEnoughStockException("Not enough stock present");
+        return new Article(this.id, this.name, this.stock - itemsDeducted);
     }
 }
