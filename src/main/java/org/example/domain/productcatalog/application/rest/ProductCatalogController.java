@@ -1,4 +1,4 @@
-package org.example.domain.productcatalog.application;
+package org.example.domain.productcatalog.application.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.example.domain.catalog.application.request.SellProductRequest;

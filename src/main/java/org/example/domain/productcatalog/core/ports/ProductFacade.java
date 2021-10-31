@@ -5,11 +5,13 @@ import org.example.domain.productcatalog.core.model.Product;
 import org.example.domain.productcatalog.core.model.ProductStatus;
 import org.example.domain.productcatalog.core.model.command.AddProductCommand;
 import org.example.domain.productcatalog.core.model.command.SellCommand;
+import org.example.domain.productcatalog.core.model.event.ProductSoldEvent;
 import org.example.domain.productcatalog.core.model.output.AddProductsOutput;
 import org.example.domain.productcatalog.core.model.output.SellOutput;
 import org.example.domain.productcatalog.core.ports.incoming.AddNewProducts;
 import org.example.domain.productcatalog.core.ports.incoming.SellProduct;
 import org.example.domain.productcatalog.core.ports.outgoing.ProductDatabase;
+import org.example.domain.productcatalog.core.ports.outgoing.ProductSaleEventPublisher;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +20,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProductFacade implements SellProduct, AddNewProducts {
 
-    private ProductDatabase productDatabase;
+    private final ProductDatabase productDatabase;
+    private final ProductSaleEventPublisher productSaleEventPublisher;
 
 
     @Override
@@ -32,7 +35,11 @@ public class ProductFacade implements SellProduct, AddNewProducts {
                             .sellStock(sellCommand.getSellQuantity())
                             .updateStatusIfSoldOut();
                     productDatabase.saveProduct(updated);
-                    //TODO send an event to update the article count
+                    productSaleEventPublisher.publish(ProductSoldEvent
+                            .fromSaleDetails(
+                                    product.getProductName()
+                                    , sellCommand.getSellQuantity()
+                                    , product.getAssociatedArticles()));
                     return new SellOutput(String.format("%s of %s product sold", sellCommand.getSellQuantity(), sellCommand.getSellProductName()));
                 });
 
