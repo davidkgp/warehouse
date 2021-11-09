@@ -1,4 +1,4 @@
-package org.example.domain.productcatalog.infrastructure;
+package org.example.domain.productcatalog.infrastructure.event;
 
 import lombok.RequiredArgsConstructor;
 import org.example.domain.productcatalog.core.model.event.ProductSoldEvent;

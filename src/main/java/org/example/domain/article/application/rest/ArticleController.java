@@ -1,7 +1,7 @@
 package org.example.domain.article.application.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.article.application.rest.output.ResponseMessage;
+import org.example.kernel.output.ResponseMessage;
 import org.example.domain.article.application.rest.input.ArticleInventory;
 import org.example.domain.article.core.model.Article;
 import org.example.domain.article.core.ports.incoming.AddArticles;

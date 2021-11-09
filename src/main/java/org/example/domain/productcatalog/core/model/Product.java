@@ -1,21 +1,28 @@
 package org.example.domain.productcatalog.core.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.domain.exceptions.EmptyStockException;
 import org.example.domain.exceptions.IllegalStockException;
 import org.example.domain.exceptions.NotAvailableForSaleException;
 import org.example.domain.exceptions.NotEnoughStockException;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@Entity
 public final class Product {
 
     private static Product INSTANCE;
 
     @Id
     private final String productName;
+    @OneToMany
     private final Set<AssociatedArticle> associatedArticles;
     private int stockQuantity = 0;
     private ProductStatus productStatus;
@@ -47,12 +54,12 @@ public final class Product {
         return this;
     }
 
-    public Product updateStatusIfSoldOut(){
-        if(this.stockQuantity==0) this.productStatus =ProductStatus.SOLD_OUT;
+    public Product updateStatusIfSoldOut() {
+        if (this.stockQuantity == 0) this.productStatus = ProductStatus.SOLD_OUT;
         return this;
     }
 
-    public Product updateStatus(final ProductStatus productStatus){
+    public Product updateStatus(final ProductStatus productStatus) {
         this.productStatus = productStatus;
         return this;
     }

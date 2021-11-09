@@ -2,6 +2,7 @@ package org.example.domain.productcatalog.core.model.command;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.example.domain.productcatalog.application.rest.input.ProductLine;
 
 import java.util.Map;
 

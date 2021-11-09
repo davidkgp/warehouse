@@ -6,8 +6,7 @@ import java.util.Optional;
 
 public interface ProductDatabase {
 
-
     Optional<Product> getProduct(String sellProductName);
 
-    void saveProduct(Product product);
+    Product saveProduct(Product product);
 }
