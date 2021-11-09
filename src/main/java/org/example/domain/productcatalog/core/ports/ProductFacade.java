@@ -1,6 +1,7 @@
 package org.example.domain.productcatalog.core.ports;
 
 import lombok.AllArgsConstructor;
+import org.example.domain.productcatalog.core.model.AssociatedArticle;
 import org.example.domain.productcatalog.core.model.Product;
 import org.example.domain.productcatalog.core.model.ProductStatus;
 import org.example.domain.productcatalog.core.model.command.AddProductCommand;
@@ -51,38 +52,45 @@ public class ProductFacade implements SellProduct, AddNewProducts, UpdateProduct
     }
 
     @Override
-    public AddProductsOutput handle(final AddProductCommand products) {
+    public AddProductsOutput handle(final AddProductCommand addProductCommand) {
 
 
-        List<Integer> stockAdded = products
+        List<Product> savedProducts = addProductCommand
                 .getProducts()
-                .entrySet()
                 .stream()
-                .map(productLineLongEntry -> {
-                    final Optional<Product> productResult = productDatabase
-                            .getProduct(productLineLongEntry.getKey().getProductName());
-                    return productResult.map(product -> {
-                        Product updated = product
-                                .addStock(productLineLongEntry.getValue())
-                                .updateStatus(ProductStatus.UPLOADED_CHECKING_ARTICLE_STOCK);
-                        productDatabase.saveProduct(updated);
-                        productAddEventPublisher.publish(ProductAddEvent.fromProductAdd(updated.getProductName()
-                                , updated.getStockQuantity()
-                                , product.getAssociatedArticles()));
-                        return productLineLongEntry.getValue();
-                    }).orElseGet(() -> {
-                        assert productLineLongEntry.getValue() != null;
-                        return -1 * productLineLongEntry.getValue();
-                    });
+                .map(productWithStock -> {
+                    Optional<Product> productResult = productDatabase.getProduct(productWithStock.getValue0().getProductName());
+                    return productResult.map(productinDB ->
+                            //chance to update the article association, not implemented
+                            productinDB
+                                    .addStock(productWithStock.getValue1())
+
+                    ).orElse(Product
+                            .initializeWithStock(
+                                    productWithStock.getValue0().getProductName()
+                                    , productWithStock
+                                            .getValue0()
+                                            .getContainingArticlesList()
+                                            .stream()
+                                            .map(containingArticle -> new AssociatedArticle(containingArticle.getId(), containingArticle.getQuantity()))
+                                            .collect(Collectors.toSet())
+                                    , productWithStock.getValue1()
+                            ));
+
+                })
+                .map(updatedProduct -> updatedProduct.updateStatus(ProductStatus.UPLOADED_CHECKING_ARTICLE_STOCK))
+                .map(productDatabase::saveProduct)
+                .collect(Collectors.toList());
+
+        savedProducts.forEach(savedProduct -> productAddEventPublisher.publish(ProductAddEvent.fromProductAdd(savedProduct.getProductName()
+                , savedProduct.getStockQuantity()
+                , savedProduct.getAssociatedArticles())));
 
 
-                }).collect(Collectors.toList());
-
-        int stockAddedCount = stockAdded.stream().filter(value -> value > 0).reduce(0, Integer::sum);
-        int stockNotAddedCount = stockAdded.stream().filter(value -> value < 0).reduce(0, Integer::sum);
+        int stockAddedCount = savedProducts.size();
 
 
-        return new AddProductsOutput(stockAddedCount, stockNotAddedCount);
+        return new AddProductsOutput(stockAddedCount, 0);
     }
 
     @Override

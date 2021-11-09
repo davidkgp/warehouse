@@ -9,6 +9,7 @@ import org.example.domain.productcatalog.core.ports.incoming.AddNewProducts;
 import org.example.domain.productcatalog.core.ports.incoming.SellProduct;
 import org.example.kernel.JsonConverter;
 import org.example.kernel.output.ResponseMessage;
+import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -44,12 +45,12 @@ public class ProductCatalogController {
         String fileContent = new String(file.getBytes(), StandardCharsets.UTF_8);
         List<ProductLine> productLines = Arrays.asList(productParser.convert(fileContent).getProducts());
         Map<ProductLine, Long> products = productLines.stream().collect(groupingBy(e -> e, counting()));
-        Map<ProductLine, Integer> productsConverted = new HashMap<>();
-        for (Map.Entry<ProductLine, Long> entry : products.entrySet()) {
-            productsConverted.put(entry.getKey(), entry.getValue().intValue());
-        }
 
-        AddProductsOutput productsAddedResult = addNewProducts.handle(new AddProductCommand(productsConverted));
+
+        AddProductsOutput productsAddedResult = addNewProducts.handle(new AddProductCommand(products
+                .entrySet()
+                .stream()
+                .map(entry -> Pair.with(entry.getKey(), entry.getValue().intValue())).collect(Collectors.toSet())));
         String message = "Uploaded the file successfully: "
                 + file.getOriginalFilename()
                 + ", and "

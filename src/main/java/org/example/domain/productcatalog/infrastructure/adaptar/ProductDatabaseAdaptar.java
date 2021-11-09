@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.domain.productcatalog.core.model.Product;
 import org.example.domain.productcatalog.core.ports.outgoing.ProductDatabase;
 import org.example.domain.productcatalog.infrastructure.adaptar.repository.ProductRepository;
+import org.example.domain.productcatalog.infrastructure.adaptar.repository.entity.ProductEntity;
 
 import java.util.Optional;
 
@@ -14,11 +15,16 @@ public class ProductDatabaseAdaptar implements ProductDatabase {
 
     @Override
     public Optional<Product> getProduct(String sellProductName) {
-        return productRepository.findById(sellProductName);
+
+
+        Optional<ProductEntity> result = productRepository.findById(sellProductName);
+        return result.map(ProductEntity::getProductDomain);
     }
 
     @Override
     public Product saveProduct(Product product) {
-        return productRepository.save(product);
+
+        ProductEntity savedEntity = productRepository.save(ProductEntity.fromProductDomain(product));
+        return savedEntity.getProductDomain();
     }
 }

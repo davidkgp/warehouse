@@ -1,19 +1,15 @@
 package org.example.domain.productcatalog.core.model;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
-@Entity
-@NoArgsConstructor(access = AccessLevel.PRIVATE,force = true)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class AssociatedArticle {
-    @Id
     private final String id;
     private final int count;
+
 }

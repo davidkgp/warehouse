@@ -8,6 +8,7 @@ import org.example.domain.exceptions.IllegalStockException;
 import org.example.domain.exceptions.NotAvailableForSaleException;
 import org.example.domain.exceptions.NotEnoughStockException;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -15,14 +16,11 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-@Entity
 public final class Product {
 
     private static Product INSTANCE;
 
-    @Id
     private final String productName;
-    @OneToMany
     private final Set<AssociatedArticle> associatedArticles;
     private int stockQuantity = 0;
     private ProductStatus productStatus;
@@ -35,10 +33,7 @@ public final class Product {
     }
 
     public static Product initializeWithStock(final String productName, final Set<AssociatedArticle> associatedArticles, final int stockQuantity) {
-        if (INSTANCE == null) {
-            INSTANCE = new Product(productName, associatedArticles, stockQuantity, ProductStatus.UPLOADED_CHECKING_ARTICLE_STOCK);
-        }
-
+        INSTANCE = new Product(productName, associatedArticles, stockQuantity, ProductStatus.UPLOADED_CHECKING_ARTICLE_STOCK);
         return INSTANCE;
     }
 
