@@ -1,8 +1,8 @@
-package org.example.shared.config;
+package org.example.kernel.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.domain.article.application.rest.input.ArticleInventory;
-import org.example.shared.JsonConverter;
+import org.example.kernel.JsonConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

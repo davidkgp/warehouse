@@ -1,4 +1,4 @@
-package org.example.shared;
+package org.example.kernel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;

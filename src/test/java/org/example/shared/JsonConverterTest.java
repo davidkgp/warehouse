@@ -1,7 +1,7 @@
 package org.example.shared;;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.shared.JsonConverter;
+import org.example.kernel.JsonConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

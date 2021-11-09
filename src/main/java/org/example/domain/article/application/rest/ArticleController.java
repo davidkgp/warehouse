@@ -1,11 +1,11 @@
 package org.example.domain.article.application.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.article.application.output.ResponseMessage;
+import org.example.domain.article.application.rest.output.ResponseMessage;
 import org.example.domain.article.application.rest.input.ArticleInventory;
 import org.example.domain.article.core.model.Article;
 import org.example.domain.article.core.ports.incoming.AddArticles;
-import org.example.shared.JsonConverter;
+import org.example.kernel.JsonConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

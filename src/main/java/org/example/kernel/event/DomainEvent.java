@@ -1,4 +1,4 @@
-package org.example.domain.kernel.event;
+package org.example.kernel.event;
 
 import lombok.Getter;
 

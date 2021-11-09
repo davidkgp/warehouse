@@ -1,4 +1,4 @@
-package org.example.domain.article.application.output;
+package org.example.domain.article.application.rest.output;
 
 
 import lombok.Getter;

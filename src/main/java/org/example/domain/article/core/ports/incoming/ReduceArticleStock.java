@@ -1,5 +1,7 @@
 package org.example.domain.article.core.ports.incoming;
 
+import org.example.domain.article.core.model.command.ReduceArticleCommand;
+
 public interface ReduceArticleStock {
-    void handle(String articleId, int reduction);
+    void handle(ReduceArticleCommand reduceArticleCommand);
 }

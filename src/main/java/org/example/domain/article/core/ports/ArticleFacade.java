@@ -2,6 +2,7 @@ package org.example.domain.article.core.ports;
 
 import lombok.AllArgsConstructor;
 import org.example.domain.article.core.model.Article;
+import org.example.domain.article.core.model.command.ReduceArticleCommand;
 import org.example.domain.article.core.ports.incoming.AddArticles;
 import org.example.domain.article.core.ports.incoming.ReduceArticleStock;
 import org.example.domain.article.core.ports.outgoing.ArticleDatabase;
@@ -33,14 +34,14 @@ public class ArticleFacade implements AddArticles, ReduceArticleStock {
     }
 
     @Override
-    public void handle(String articleId, int reduction) {
+    public void handle(final ReduceArticleCommand reduceArticleCommand) {
 
-        Optional<Article> articleDBResult = articleDatabase.get(articleId);
+        Optional<Article> articleDBResult = articleDatabase.get(reduceArticleCommand.getArticleId());
 
         articleDBResult
-                .map(article -> article.reduceStock(reduction))
+                .map(article -> article.reduceStock(reduceArticleCommand.getReduction()))
                 .map(article -> articleDatabase.save(article))
-                .orElseThrow(() -> new ArticleNotFoundException(String.format("Article %s not found", articleId)));
+                .orElseThrow(() -> new ArticleNotFoundException(String.format("Article %s not found", reduceArticleCommand.getArticleId())));
 
 
     }

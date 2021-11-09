@@ -1,6 +1,6 @@
 package org.example.domain.productcatalog.core.model.event;
 
-import org.example.domain.kernel.event.DomainEvent;
+import org.example.kernel.event.DomainEvent;
 import org.example.domain.productcatalog.core.model.AssociatedArticle;
 
 import java.util.Set;

@@ -6,6 +6,7 @@ import org.example.domain.exceptions.IllegalStockException;
 import org.example.domain.exceptions.NotAvailableForSaleException;
 import org.example.domain.exceptions.NotEnoughStockException;
 
+import javax.persistence.Id;
 import java.util.Set;
 
 @Getter
@@ -13,6 +14,7 @@ public final class Product {
 
     private static Product INSTANCE;
 
+    @Id
     private final String productName;
     private final Set<AssociatedArticle> associatedArticles;
     private int stockQuantity = 0;
