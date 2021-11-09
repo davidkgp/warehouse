@@ -12,6 +12,7 @@ import org.example.domain.productcatalog.core.model.event.ProductSoldEvent;
 import org.example.domain.productcatalog.core.model.output.AddProductsOutput;
 import org.example.domain.productcatalog.core.model.output.SellOutput;
 import org.example.domain.productcatalog.core.ports.incoming.AddNewProducts;
+import org.example.domain.productcatalog.core.ports.incoming.GetProduct;
 import org.example.domain.productcatalog.core.ports.incoming.SellProduct;
 import org.example.domain.productcatalog.core.ports.incoming.UpdateProductStatus;
 import org.example.domain.productcatalog.core.ports.outgoing.ProductAddEventPublisher;
@@ -23,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class ProductFacade implements SellProduct, AddNewProducts, UpdateProductStatus {
+public class ProductFacade implements SellProduct, AddNewProducts, UpdateProductStatus, GetProduct {
 
     private final ProductDatabase productDatabase;
     private final ProductSaleEventPublisher productSaleEventPublisher;
@@ -102,5 +103,10 @@ public class ProductFacade implements SellProduct, AddNewProducts, UpdateProduct
                 .map(product -> product.updateStatus(updateProductStatusCommand.getProductStatus()))
                 .ifPresent(productDatabase::saveProduct);
 
+    }
+
+    @Override
+    public Optional<Product> handle(String productName) {
+        return productDatabase.getProduct(productName);
     }
 }

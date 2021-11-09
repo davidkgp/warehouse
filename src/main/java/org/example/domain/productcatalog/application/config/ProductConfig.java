@@ -2,6 +2,7 @@ package org.example.domain.productcatalog.application.config;
 
 import org.example.domain.productcatalog.core.ports.ProductFacade;
 import org.example.domain.productcatalog.core.ports.incoming.AddNewProducts;
+import org.example.domain.productcatalog.core.ports.incoming.GetProduct;
 import org.example.domain.productcatalog.core.ports.incoming.SellProduct;
 import org.example.domain.productcatalog.core.ports.incoming.UpdateProductStatus;
 import org.example.domain.productcatalog.core.ports.outgoing.ProductAddEventPublisher;
@@ -34,6 +35,13 @@ public class ProductConfig {
     public AddNewProducts addNewProducts(final ProductDatabase productDatabase,
                                            final ProductSaleEventPublisher productSaleEventPublisher,
                                            final ProductAddEventPublisher productAddEventPublisher) {
+        return new ProductFacade(productDatabase, productSaleEventPublisher, productAddEventPublisher);
+
+    }
+    @Bean
+    public GetProduct getProduct(final ProductDatabase productDatabase,
+                                     final ProductSaleEventPublisher productSaleEventPublisher,
+                                     final ProductAddEventPublisher productAddEventPublisher) {
         return new ProductFacade(productDatabase, productSaleEventPublisher, productAddEventPublisher);
 
     }
