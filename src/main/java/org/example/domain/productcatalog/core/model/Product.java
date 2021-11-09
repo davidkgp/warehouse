@@ -15,25 +15,25 @@ public final class Product {
 
     private final String productName;
     private final Set<AssociatedArticle> associatedArticles;
-    private long stockQuantity = 0;
+    private int stockQuantity = 0;
     private ProductStatus productStatus;
 
-    private Product(final String productName, final Set<AssociatedArticle> associatedArticles, final long stockQuantity, final ProductStatus productStatus) {
+    private Product(final String productName, final Set<AssociatedArticle> associatedArticles, final int stockQuantity, final ProductStatus productStatus) {
         this.productName = productName;
         this.associatedArticles = associatedArticles;
         this.stockQuantity = stockQuantity;
         this.productStatus = productStatus;
     }
 
-    public static Product initializeWithStock(final String productName, final Set<AssociatedArticle> associatedArticles, final long stockQuantity) {
+    public static Product initializeWithStock(final String productName, final Set<AssociatedArticle> associatedArticles, final int stockQuantity) {
         if (INSTANCE == null) {
-            INSTANCE = new Product(productName, associatedArticles, stockQuantity, ProductStatus.UPLOADED);
+            INSTANCE = new Product(productName, associatedArticles, stockQuantity, ProductStatus.UPLOADED_CHECKING_ARTICLE_STOCK);
         }
 
         return INSTANCE;
     }
 
-    public Product sellStock(final long quantity) {
+    public Product sellStock(final int quantity) {
         if (this.stockQuantity == 0)
             throw new EmptyStockException("Selling to is not  possible as empty stock");
         if (quantity > this.stockQuantity)
@@ -55,7 +55,7 @@ public final class Product {
         return this;
     }
 
-    public Product addStock(final long quantity) {
+    public Product addStock(final int quantity) {
         if (quantity < 0) throw new IllegalStockException("Negetive stock of product not allowed");
         this.stockQuantity = this.stockQuantity + quantity;
         return this;

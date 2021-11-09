@@ -5,11 +5,15 @@ import org.example.domain.productcatalog.core.model.Product;
 import org.example.domain.productcatalog.core.model.ProductStatus;
 import org.example.domain.productcatalog.core.model.command.AddProductCommand;
 import org.example.domain.productcatalog.core.model.command.SellCommand;
+import org.example.domain.productcatalog.core.model.command.UpdateProductStatusCommand;
+import org.example.domain.productcatalog.core.model.event.ProductAddEvent;
 import org.example.domain.productcatalog.core.model.event.ProductSoldEvent;
 import org.example.domain.productcatalog.core.model.output.AddProductsOutput;
 import org.example.domain.productcatalog.core.model.output.SellOutput;
 import org.example.domain.productcatalog.core.ports.incoming.AddNewProducts;
 import org.example.domain.productcatalog.core.ports.incoming.SellProduct;
+import org.example.domain.productcatalog.core.ports.incoming.UpdateProductStatus;
+import org.example.domain.productcatalog.core.ports.outgoing.ProductAddEventPublisher;
 import org.example.domain.productcatalog.core.ports.outgoing.ProductDatabase;
 import org.example.domain.productcatalog.core.ports.outgoing.ProductSaleEventPublisher;
 
@@ -18,10 +22,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class ProductFacade implements SellProduct, AddNewProducts {
+public class ProductFacade implements SellProduct, AddNewProducts, UpdateProductStatus {
 
     private final ProductDatabase productDatabase;
     private final ProductSaleEventPublisher productSaleEventPublisher;
+    private final ProductAddEventPublisher productAddEventPublisher;
 
 
     @Override
@@ -59,11 +64,16 @@ public class ProductFacade implements SellProduct, AddNewProducts {
                     return productResult.map(product -> {
                         Product updated = product
                                 .addStock(productLineLongEntry.getValue())
-                                .updateStatus(ProductStatus.UPLOADED);
+                                .updateStatus(ProductStatus.UPLOADED_CHECKING_ARTICLE_STOCK);
                         productDatabase.saveProduct(updated);
-                        //TODO send an event to update the article count
+                        productAddEventPublisher.publish(ProductAddEvent.fromProductAdd(updated.getProductName()
+                                , updated.getStockQuantity()
+                                , product.getAssociatedArticles()));
                         return productLineLongEntry.getValue();
-                    }).orElseGet(() -> -1 * productLineLongEntry.getValue());
+                    }).orElseGet(() -> {
+                        assert productLineLongEntry.getValue() != null;
+                        return -1 * productLineLongEntry.getValue();
+                    });
 
 
                 }).collect(Collectors.toList());
@@ -73,5 +83,16 @@ public class ProductFacade implements SellProduct, AddNewProducts {
 
 
         return new AddProductsOutput(stockAddedCount, stockNotAddedCount);
+    }
+
+    @Override
+    public void handle(final UpdateProductStatusCommand updateProductStatusCommand) {
+
+        Optional<Product> productResult = productDatabase.getProduct(updateProductStatusCommand.getProductName());
+
+        productResult
+                .map(product -> product.updateStatus(updateProductStatusCommand.getProductStatus()))
+                .ifPresent(productDatabase::saveProduct);
+
     }
 }

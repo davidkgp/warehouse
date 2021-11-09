@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class ArticleAssociated {
 
-    private final int quantity;
+    private final int requiredQuantity;
     private final String articleId;
 }

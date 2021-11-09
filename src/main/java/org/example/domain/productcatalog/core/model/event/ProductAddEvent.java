@@ -1,8 +1,10 @@
 package org.example.domain.productcatalog.core.model.event;
 
 import org.example.domain.kernel.event.DomainEvent;
+import org.example.domain.productcatalog.core.model.AssociatedArticle;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ProductAddEvent extends DomainEvent {
 
@@ -15,6 +17,13 @@ public class ProductAddEvent extends DomainEvent {
         this.productName = productName;
         this.stockAdded = stockAdded;
         this.articlesToBeReserved = articlesToBeReserved;
+    }
+
+    public static ProductAddEvent fromProductAdd(final String productName, final int stockAdded, final Set<AssociatedArticle> associatedArticles) {
+        return new ProductAddEvent(productName, stockAdded, associatedArticles
+                .stream()
+                .map(associatedArticle -> new ArticleAssociated(associatedArticle.getCount() * stockAdded, associatedArticle.getId()))
+                .collect(Collectors.toSet()));
     }
 
 }
