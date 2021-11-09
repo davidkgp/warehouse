@@ -3,9 +3,13 @@ package org.example.domain.productcatalog.application.rest;
 import lombok.RequiredArgsConstructor;
 import org.example.domain.productcatalog.application.rest.input.ProductLine;
 import org.example.domain.productcatalog.application.rest.input.Products;
+import org.example.domain.productcatalog.application.rest.input.SellProductRequest;
+import org.example.domain.productcatalog.application.rest.input.SellProductResponse;
 import org.example.domain.productcatalog.core.model.Product;
 import org.example.domain.productcatalog.core.model.command.AddProductCommand;
+import org.example.domain.productcatalog.core.model.command.SellCommand;
 import org.example.domain.productcatalog.core.model.output.AddProductsOutput;
+import org.example.domain.productcatalog.core.model.output.SellOutput;
 import org.example.domain.productcatalog.core.ports.incoming.AddNewProducts;
 import org.example.domain.productcatalog.core.ports.incoming.GetProduct;
 import org.example.domain.productcatalog.core.ports.incoming.SellProduct;
@@ -18,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,22 +80,22 @@ public class ProductCatalogController {
         return getProduct
                 .handle(productName)
                 .map(ResponseEntity::ok)
-                .orElseGet(()->ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 
-//    @PostMapping("/sell")
-//    public ResponseEntity<SellProductResponse> sellProduct(@RequestBody final SellProductRequest sellProductRequest) {
-//
-//        final SellCommand sellCommand = new SellCommand(sellProductRequest.getProductName(), sellProductRequest.getQuantity());
-//
-//        final Optional<SellOutput> sellOutput = sellProduct.handle(sellCommand);
-//
-//        return sellOutput
-//                .map(output -> ResponseEntity.accepted()
-//                        .body(new SellProductResponse(output.getSellStatus()))
-//                ).orElseGet(() -> ResponseEntity.notFound().build());
-//
-//
-//    }
+    @PostMapping("/sell")
+    public ResponseEntity<SellProductResponse> sellProduct(@RequestBody final SellProductRequest sellProductRequest) {
+
+        final SellCommand sellCommand = new SellCommand(sellProductRequest.getProductName(), sellProductRequest.getQuantity());
+
+        final Optional<SellOutput> sellOutput = sellProduct.handle(sellCommand);
+
+        return sellOutput
+                .map(output -> ResponseEntity.accepted()
+                        .body(new SellProductResponse(output.getSellStatus()))
+                ).orElseGet(() -> ResponseEntity.notFound().build());
+
+
+    }
 }
