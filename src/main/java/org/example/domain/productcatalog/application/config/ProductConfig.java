@@ -21,29 +21,25 @@ public class ProductConfig {
         return new ProductDatabaseAdaptar(productRepository);
     }
 
-    //ProductFacade implements SellProduct, AddNewProducts, UpdateProductStatus
-
     @Bean
     public SellProduct sellProduct(final ProductDatabase productDatabase,
-                                      final ProductSaleEventPublisher productSaleEventPublisher,
-                                      final ProductAddEventPublisher productAddEventPublisher) {
+                                   final ProductSaleEventPublisher productSaleEventPublisher,
+                                   final ProductAddEventPublisher productAddEventPublisher) {
         return new ProductFacade(productDatabase, productSaleEventPublisher, productAddEventPublisher);
-
     }
 
     @Bean
     public AddNewProducts addNewProducts(final ProductDatabase productDatabase,
-                                           final ProductSaleEventPublisher productSaleEventPublisher,
-                                           final ProductAddEventPublisher productAddEventPublisher) {
+                                         final ProductSaleEventPublisher productSaleEventPublisher,
+                                         final ProductAddEventPublisher productAddEventPublisher) {
         return new ProductFacade(productDatabase, productSaleEventPublisher, productAddEventPublisher);
-
     }
+
     @Bean
     public GetProduct getProduct(final ProductDatabase productDatabase,
-                                     final ProductSaleEventPublisher productSaleEventPublisher,
-                                     final ProductAddEventPublisher productAddEventPublisher) {
+                                 final ProductSaleEventPublisher productSaleEventPublisher,
+                                 final ProductAddEventPublisher productAddEventPublisher) {
         return new ProductFacade(productDatabase, productSaleEventPublisher, productAddEventPublisher);
-
     }
 
     @Bean
@@ -51,7 +47,6 @@ public class ProductConfig {
                                                    final ProductSaleEventPublisher productSaleEventPublisher,
                                                    final ProductAddEventPublisher productAddEventPublisher) {
         return new ProductFacade(productDatabase, productSaleEventPublisher, productAddEventPublisher);
-
     }
 
 }
