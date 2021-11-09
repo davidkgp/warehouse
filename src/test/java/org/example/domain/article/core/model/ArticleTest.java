@@ -5,11 +5,13 @@ import org.example.domain.exceptions.EmptyStockException;
 import org.example.domain.exceptions.IllegalStockException;
 import org.example.domain.exceptions.NotEnoughStockException;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Tag("unit-test")
 public class ArticleTest {
 
     @Test
