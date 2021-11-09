@@ -1,11 +1,12 @@
-package org.example.domain.article.application.event;
+package org.example.domain.article.core.model.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ProductArticleInventoryUnavailableEvent {
-    private String productName;
-}
+public class ProductArticleInventoryAvailableEvent {
 
+    private String productName;
+
+}
